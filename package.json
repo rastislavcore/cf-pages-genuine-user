@@ -1,0 +1,33 @@
+{
+  "name": "cf-pages-genuine-user",
+  "version": "1.0.0",
+  "description": "Genuine user for organization",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rastislavcore/cf-pages-genuine-user.git"
+  },
+  "keywords": [
+    "cloudflare-pages",
+    "genuine",
+    "user",
+    "authentic"
+  ],
+  "author": "@rastislavcore",
+  "license": "CORE",
+  "bugs": {
+    "url": "https://github.com/rastislavcore/cf-pages-genuine-user/issues"
+  },
+  "homepage": "https://github.com/rastislavcore/cf-pages-genuine-user#readme",
+  "dependencies": {
+    "@cloudflare/pages-plugin-hcaptcha": "^1.0.4",
+    "@cloudflare/pages-plugin-static-forms": "^1.0.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@types/node": "^20.12.12",
+    "typescript": "^5.4.5"
+  }
+}
