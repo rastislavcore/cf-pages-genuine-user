@@ -18,7 +18,7 @@ Create a `.env` file in the root of your project and add the following environme
 ```sh
 HCAPTCHA_SECRET=<your-hcaptcha-secret-key>
 HCAPTCHA_SITE_KEY=<your-hcaptcha-site-key>
-KV_NAMESPACE_ID=<your-kv-namespace-id>
+KV_NAMESPACE=<your-kv-namespace-id-connector>
 ```
 
 ### Installation
@@ -49,37 +49,14 @@ KV_NAMESPACE_ID=<your-kv-namespace-id>
 Use the following HTML for your form. Place this in an HTML file that you serve from your Cloudflare Pages site.
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verification Form</title>
-</head>
-<body>
-    <h1>Verify Us</h1>
-    <form id="verify-form" data-static-form-name="verify-person">
-        <label for="type">Contact Type:</label>
-        <select id="type" name="type" required>
-            <option value="email" selected>E-mail</option>
-            <option value="telegram">Telegram</option>
-            <option value="x">X (Twitter)</option>
-            <option value="discord">Discord</option>
-            <option value="linkedin">LinkedIn</option>
-            <option value="coretalk">CoreTalk</option>
-            <option value="github">GitHub</option>
-        </select>
-        <br>
-        <label for="username">Contact name:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <div class="h-captcha"></div>
-        <br>
-        <button type="submit">Verify</button>
-    </form>
-    <script src="https://hcaptcha.com/1/api.js" async defer></script>
-</body>
-</html>
+<form id="verify-form" data-static-form-name="verify-person">
+    <select id="type" name="type" required>
+        …
+    </select>
+    <input type="text" id="username" name="username" pattern="[a-zA-Z0-9%_@.-]+" required />
+    <button type="submit">Verify</button>
+</form>
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
 ```
 
 ## License
