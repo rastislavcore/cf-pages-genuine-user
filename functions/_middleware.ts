@@ -5,14 +5,7 @@ import { PagesFunction, KVNamespace } from '@cloudflare/workers-types';
 interface Env {
     HCAPTCHA_SECRET: string;
     HCAPTCHA_SITE_KEY: string;
-    KV_NAMESPACE: KVNamespace;
 }
-
-// hCaptcha verification plugin
-const hcaptcha = hcaptchaVerify({
-    secret: 'HCAPTCHA_SECRET_PLACEHOLDER',
-    sitekey: 'HCAPTCHA_SITE_KEY_PLACEHOLDER',
-});
 
 declare const KV_NAMESPACE: KVNamespace;
 
