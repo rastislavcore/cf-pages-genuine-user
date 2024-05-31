@@ -29,7 +29,7 @@
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
-            const sitekey = "{{HCAPTCHA_SITEKEY}}";  // Placeholder
+            const sitekey = "{{HCAPTCHA_SITEKEY}}";
             if (sitekey) {
                 const hcaptchaContainer = document.getElementById('hcaptcha-container');
                 hcaptchaContainer.setAttribute('data-sitekey', sitekey);
