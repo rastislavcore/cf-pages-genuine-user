@@ -11,6 +11,21 @@ This project demonstrates how to create a serverless function on Cloudflare Page
 3. **Cloudflare Workers** and **KV Namespace** set up.
 4. **hCaptcha** account for obtaining the secret and site key.
 
+### Dependencies
+
+This project requires two libraries:
+
+- [@cloudflare/pages-plugin-static-forms](https://www.npmjs.com/package/@cloudflare/pages-plugin-static-forms)
+- [@cloudflare/pages-plugin-hcaptcha](https://www.npmjs.com/package/@cloudflare/pages-plugin-hcaptcha)
+
+Make sure install them or include them in your project.
+
+Installation:
+
+```sh
+npm i @cloudflare/pages-plugin-static-forms @cloudflare/pages-plugin-hcaptcha
+```
+
 ### Environment Variables
 
 Create a `.env` file in the root of your project and add the following environment variables:
@@ -32,7 +47,7 @@ HCAPTCHA_SITE_KEY=<your-hcaptcha-site-key>
 2. Install dependencies:
 
     ```bash
-    npm install
+    npm i
     ```
 
 3. Deploy to Cloudflare Pages:
@@ -54,6 +69,20 @@ type:username | representative
 - **type**: The provider type in lowercase characters.
 - **username**: The username of the representative in lowercase characters, with the first character `@` or `+` trimmed.
 - **representative**: The public name of representative for the requester. Output example: `User: '${representative}' is an official representative under this contact.`
+
+## Building
+
+If you would like build JavaScript file, you can use command:
+
+```sh
+npm i && npm build
+```
+
+If you need just Typescript file, installing required libraries is enough:
+
+```sh
+npm i
+```
 
 ## Usage
 

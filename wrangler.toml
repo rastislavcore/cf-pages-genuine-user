@@ -1,3 +1,6 @@
+name = "cf-pages-genuine-user"
+type = "javascript"
+
 [placement]
 mode = "smart"
 
