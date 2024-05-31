@@ -4,8 +4,8 @@
   "description": "Genuine user for organization",
   "scripts": {
     "build": "tsc",
-    "generate:sitekey": "mkdir -p .well-known && echo '{\"sitekey\": \"$HCAPTCHA_SITEKEY\"}' > .well-known/sitekey.json",
-    "generate": "npm i && npm run generate:sitekey"
+    "replace:sitekey": "sed -i 's/{{HCAPTCHA_SITEKEY}}/$HCAPTCHA_SITEKEY/g' public/index.html",
+    "generate": "npm i && npm run replace:sitekey"
   },
   "repository": {
     "type": "git",

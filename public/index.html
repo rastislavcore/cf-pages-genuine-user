@@ -28,11 +28,8 @@
     </form>
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
     <script>
-        // JavaScript to fetch sitekey and render hCaptcha
         document.addEventListener("DOMContentLoaded", async () => {
-            const response = await fetch('/.well-known/sitekey');
-            const data = await response.json();
-            const sitekey = data.sitekey;
+            const sitekey = "{{HCAPTCHA_SITEKEY}}";  // Placeholder
             if (sitekey) {
                 const hcaptchaContainer = document.getElementById('hcaptcha-container');
                 hcaptchaContainer.setAttribute('data-sitekey', sitekey);
