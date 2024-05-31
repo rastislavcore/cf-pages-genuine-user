@@ -58,9 +58,19 @@ HCAPTCHA_SITE_KEY=<your-hcaptcha-site-key>
 
 ### Key-Value (KV) Storage
 
-Set up KV storage and binding for the system in read-only mode. The default setup is in `wrangler.toml`, but it needs to be modified in the Cloudflare Dashboard. Do not store private information directly in `wrangler.toml`! This file is published.
+Set up KV storage and binding for the system in read-only mode.
 
-Database structure:
+#### Set KV namespace bindings
+
+1. Open CLoudflare Dashboard - Workers & Pages - Your deployed page.
+2. Go to project Settings - Functions tab.
+3. Scroll down to KV namespace bindings.
+4. Click on "Get started" button.
+5. Click on "Create a namespace" button.
+6. Fill in Namespace Name as `KV_NAMESPACE` and click "Add".
+7. Now you can add the entries.
+
+#### Database structure
 
 Key | Value
 --- | ---
@@ -96,6 +106,7 @@ Use the following HTML for your form. Place this in an HTML file that you serve 
         …
     </select>
     <input type="text" id="username" name="username" pattern="[a-zA-Z0-9%_@.+-]+" required />
+    <div class="h-captcha" data-sitekey="your_site_key"></div>
     <button type="submit">Verify</button>
 </form>
 <script src="https://hcaptcha.com/1/api.js" async defer></script>

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Genuine user for organization",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "generate:sitekey": "mkdir -p .well-known && echo '{\"sitekey\": \"$HCAPTCHA_SITEKEY\"}' > .well-known/sitekey.json",
+    "generate": "npm i && npm run generate:sitekey"
   },
   "repository": {
     "type": "git",
