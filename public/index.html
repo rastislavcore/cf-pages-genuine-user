@@ -22,22 +22,10 @@
         <label for="username">Contact name:</label>
         <input type="text" id="username" name="username" pattern="[a-zA-Z0-9%_@.+-]+" required />
         <br>
-        <div id="hcaptcha-container" class="h-captcha"></div>
+        <div class="h-captcha" data-sitekey="{{HCAPTCHA_SITEKEY}}"></div>
         <br>
         <button type="submit">Verify</button>
     </form>
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const sitekey = "{{HCAPTCHA_SITEKEY}}";
-            if (sitekey) {
-                const hcaptchaContainer = document.getElementById('hcaptcha-container');
-                hcaptchaContainer.setAttribute('data-sitekey', sitekey);
-                hcaptcha.render(hcaptchaContainer, { sitekey: sitekey });
-            } else {
-                console.error("hCaptcha sitekey is missing.");
-            }
-        });
-    </script>
 </body>
 </html>
