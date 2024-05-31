@@ -105,7 +105,7 @@ Use the following HTML for your form. Place this in an HTML file that you serve 
     <select id="type" name="type" required>
         …
     </select>
-    <input type="text" id="username" name="username" pattern="[a-zA-Z0-9%_@.+-]+" required />
+    <input type="text" id="username" name="username" pattern="[a-zA-Z0-9%_@.+\\-]+" required />
     <div class="h-captcha" data-sitekey="your_site_key"></div>
     <button type="submit">Verify</button>
 </form>
