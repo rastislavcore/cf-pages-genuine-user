@@ -54,6 +54,14 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
 export const onRequestPost: PagesFunction<Env> = async (context) => {
     const { env, request } = context;
 
+    // Debug
+    if (!env.HCAPTCHA_SECRET) {
+        console.warn('Missing hCaptcha details - secret');
+    }
+    if (!env.HCAPTCHA_SITE_KEY) {
+        console.warn('Missing hCaptcha details - site key');
+    }
+
     // Update hcaptcha configuration with the environment variables
     const hcaptchaConfig = hcaptchaVerify({
         secret: env.HCAPTCHA_SECRET,
