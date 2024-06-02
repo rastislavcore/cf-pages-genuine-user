@@ -4,7 +4,7 @@
   "description": "Genuine user for organization",
   "scripts": {
     "build": "tsc",
-    "replace:sitekey": "sh -c 'sed -i \"s/{{HCAPTCHA_SITEKEY}}/${HCAPTCHA_SITEKEY}/g\" public/index.html'",
+    "replace:sitekey": "sh -c 'sed -i \"s/{{HCAPTCHA_SITE_KEY}}/${HCAPTCHA_SITE_KEY}/g\" public/index.html'",
     "generate": "npm i && npm run replace:sitekey"
   },
   "repository": {
