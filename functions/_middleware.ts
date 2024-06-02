@@ -71,7 +71,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // Run hcaptcha verification first
     const hcaptchaResponse = await hcaptchaConfig(context);
     if (hcaptchaResponse) {
-        console.error('hCaptcha verification failed');
+        console.warn('hCaptcha verification failed');
         return hcaptchaResponse;
     }
 
