@@ -44,7 +44,8 @@
                 const messageDiv = document.getElementById('response-message');
                 if (response.ok) {
                     const result = await response.json();
-                    messageDiv.textContent = result.message;
+                    const result1 = await response.text();
+                    messageDiv.textContent = JSON.stringify(result, null, 2) + ' |and| ' + result1;
                 } else {
                     const errorText = await response.text();
                     messageDiv.textContent = `Error: ${errorText}`;
