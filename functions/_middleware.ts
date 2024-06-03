@@ -15,7 +15,8 @@ const staticForms = createStaticFormsPlugin({
         console.log(`Received form: ${name}`);
         switch (name) {
             case 'verify-person':
-                return checkRepresentative(formData);
+                console.log('Checking representative');
+                return await checkRepresentative(formData);
             default:
                 console.error('Invalid form name');
                 return new Response(JSON.stringify({
