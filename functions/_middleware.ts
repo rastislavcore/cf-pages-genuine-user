@@ -75,7 +75,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const { env, request } = context;
 
     // Update hcaptcha configuration with the environment variables
-    const hcaptchaConfig = hcaptchaVerify({
+    /*const hcaptchaConfig = hcaptchaVerify({
         secret: env.HCAPTCHA_SECRET,
         sitekey: env.HCAPTCHA_SITE_KEY,
     });
@@ -90,20 +90,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
-    }
+    }*/
 
     // If hcaptcha verification passes, run the static forms plugin
     return staticForms(context);
 };
-
-// Combine both middlewares into a single PagesFunction
-/*export const onRequest: PagesFunction = createStaticFormsPlugin({
-    respondWith: ({ formData, name }) => {
-        const username = formData.get('username')
-        return new Response(JSON.stringify({
-            message: `Hello, ${username}! Thank you for submitting the ${name} form.`,
-        }), {
-            headers: { 'Content-Type': 'application/json' },
-        })
-    }
-});*/
