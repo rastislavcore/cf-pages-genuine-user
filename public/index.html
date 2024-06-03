@@ -46,8 +46,8 @@
                     const result = await response.json();
                     messageDiv.textContent = `Ok: ${result.message}`;
                 } else {
-                    const errorText = await response.text();
-                    messageDiv.textContent = `Error: ${errorText}`;
+                    const errorData = await response.json();
+                    messageDiv.textContent = `Error: ${errorData.message}`;
                 }
             } catch (error) {
                 document.getElementById('response-message').textContent = `Error: ${error.message}`;
