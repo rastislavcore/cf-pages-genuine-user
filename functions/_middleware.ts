@@ -87,7 +87,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         return new Response(JSON.stringify({
             message: hcaptchaResponse,
         }), {
-            status: 200,
+            status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
     }

@@ -44,7 +44,7 @@
                 const messageDiv = document.getElementById('response-message');
                 if (response.ok) {
                     const result = await response.json();
-                    messageDiv.textContent = JSON.stringify(result, null, 2);
+                    messageDiv.textContent = `Ok: ${result.message}`;
                 } else {
                     const errorText = await response.text();
                     messageDiv.textContent = `Error: ${errorText}`;
