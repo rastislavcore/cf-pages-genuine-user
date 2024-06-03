@@ -53,7 +53,11 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
 // Combine both middlewares into a single PagesFunction
 export const onRequest: PagesFunction = createStaticFormsPlugin({
     respondWith: ({ formData, name }) => {
-      const username = formData.get('username')
-      return new Response(`Hello, ${username}! Thank you for submitting the ${name} form.`)
+        const username = formData.get('username')
+        return new Response(JSON.stringify({
+            message: `Hello, ${username}! Thank you for submitting the ${name} form.`,
+        }), {
+            headers: { 'Content-Type': 'application/json' },
+        })
     }
 });
