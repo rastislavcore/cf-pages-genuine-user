@@ -1,4 +1,4 @@
-//import hcaptchaVerify from '@cloudflare/pages-plugin-hcaptcha';
+import hcaptchaVerify from '@cloudflare/pages-plugin-hcaptcha';
 import createStaticFormsPlugin from '@cloudflare/pages-plugin-static-forms';
 import { PagesFunction, KVNamespace } from '@cloudflare/workers-types';
 
@@ -10,7 +10,7 @@ interface Env {
 declare const KV_NAMESPACE: KVNamespace;
 
 // Static forms plugin
-/*const staticForms = createStaticFormsPlugin({
+const staticForms = createStaticFormsPlugin({
     respondWith: async ({ formData, name }: { formData: FormData, name: string }) => {
         console.log(`Received form: ${name}`);
         switch (name) {
@@ -18,7 +18,12 @@ declare const KV_NAMESPACE: KVNamespace;
                 return checkRepresentative(formData);
             default:
                 console.error('Invalid form name');
-                return new Response('Invalid form name', { status: 400 });
+                return new Response(JSON.stringify({
+                    message: `Invalid form name`,
+                }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                });
         }
     },
 });
@@ -30,7 +35,12 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
 
     if (!type || !username) {
         console.error('Invalid form data');
-        return new Response('Invalid form data', { status: 400 });
+        return new Response(JSON.stringify({
+            message: `Invalid form data`,
+        }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
 
     // Normalize the username
@@ -43,15 +53,51 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
 
     if (representative) {
         console.log(`User found: ${representative}`);
-        return new Response(`User: '${representative}' is an official representative under this contact.`, { status: 200 });
+        return new Response(JSON.stringify({
+            message: `User: '${representative}' is an official representative under this contact.`,
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
     } else {
         console.warn('User not found');
-        return new Response("This contact is not authorized as an official contact!", { status: 404 });
+        return new Response(JSON.stringify({
+            message: `This contact is not authorized as an official contact!`,
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
-}*/
+}
 
 // Combine both middlewares into a single PagesFunction
-export const onRequest: PagesFunction = createStaticFormsPlugin({
+export const onRequestPost: PagesFunction<Env> = async (context) => {
+    const { env, request } = context;
+
+    // Update hcaptcha configuration with the environment variables
+    const hcaptchaConfig = hcaptchaVerify({
+        secret: env.HCAPTCHA_SECRET,
+        sitekey: env.HCAPTCHA_SITE_KEY,
+    });
+
+    // Run hcaptcha verification first
+    const hcaptchaResponse = await hcaptchaConfig(context);
+    if (hcaptchaResponse) {
+        console.warn('hCaptcha verification failed');
+        return new Response(JSON.stringify({
+            message: hcaptchaResponse,
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    }
+
+    // If hcaptcha verification passes, run the static forms plugin
+    return staticForms(context);
+};
+
+// Combine both middlewares into a single PagesFunction
+/*export const onRequest: PagesFunction = createStaticFormsPlugin({
     respondWith: ({ formData, name }) => {
         const username = formData.get('username')
         return new Response(JSON.stringify({
@@ -60,4 +106,4 @@ export const onRequest: PagesFunction = createStaticFormsPlugin({
             headers: { 'Content-Type': 'application/json' },
         })
     }
-});
+});*/
