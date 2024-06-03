@@ -1,4 +1,4 @@
-import hcaptchaVerify from '@cloudflare/pages-plugin-hcaptcha';
+//import hcaptchaVerify from '@cloudflare/pages-plugin-hcaptcha';
 import createStaticFormsPlugin from '@cloudflare/pages-plugin-static-forms';
 import { PagesFunction, KVNamespace } from '@cloudflare/workers-types';
 
@@ -10,7 +10,7 @@ interface Env {
 declare const KV_NAMESPACE: KVNamespace;
 
 // Static forms plugin
-const staticForms = createStaticFormsPlugin({
+/*const staticForms = createStaticFormsPlugin({
     respondWith: async ({ formData, name }: { formData: FormData, name: string }) => {
         console.log(`Received form: ${name}`);
         switch (name) {
@@ -48,33 +48,12 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
         console.warn('User not found');
         return new Response("This contact is not authorized as an official contact!", { status: 404 });
     }
-}
+}*/
 
 // Combine both middlewares into a single PagesFunction
-export const onRequestPost: PagesFunction<Env> = async (context) => {
-    const { env, request } = context;
-
-    // Debug
-    if (!env.HCAPTCHA_SECRET) {
-        console.warn('Missing hCaptcha details - secret');
+export const onRequest: PagesFunction = createStaticFormsPlugin({
+    respondWith: ({ formData, name }) => {
+      const username = formData.get('username')
+      return new Response(`Hello, ${username}! Thank you for submitting the ${name} form.`)
     }
-    if (!env.HCAPTCHA_SITE_KEY) {
-        console.warn('Missing hCaptcha details - site key');
-    }
-
-    // Update hcaptcha configuration with the environment variables
-    const hcaptchaConfig = hcaptchaVerify({
-        secret: env.HCAPTCHA_SECRET,
-        sitekey: env.HCAPTCHA_SITE_KEY,
-    });
-
-    // Run hcaptcha verification first
-    const hcaptchaResponse = await hcaptchaConfig(context);
-    if (hcaptchaResponse) {
-        console.warn('hCaptcha verification failed');
-        return hcaptchaResponse;
-    }
-
-    // If hcaptcha verification passes, run the static forms plugin
-    return staticForms(context);
-};
+});
