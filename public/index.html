@@ -47,10 +47,10 @@
                     messageDiv.textContent = `Ok: ${result.message} Data: ${JSON.stringify(result)}`;
                 } else {
                     const errorData = await response.json();
-                    messageDiv.textContent = `Error: ${errorData.message} Data: ${JSON.stringify(errorData)}`;
+                    messageDiv.textContent = `Error1: ${errorData.message} Data: ${JSON.stringify(errorData)}`;
                 }
             } catch (error) {
-                document.getElementById('response-message').textContent = `Error: ${error.message} Data: ${JSON.stringify(error)}`;
+                document.getElementById('response-message').textContent = `Error2: ${error.message} Data: ${JSON.stringify(error)}`;
             }
         });
     </script>
