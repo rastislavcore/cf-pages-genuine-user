@@ -34,6 +34,7 @@
 
             const form = event.target;
             const formData = new FormData(form);
+            console.log(formData, form.action, form.method);
 
             try {
                 const response = await fetch(form.action, {
