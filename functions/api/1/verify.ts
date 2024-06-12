@@ -86,7 +86,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // Update hcaptcha configuration with the environment variables
-    const hcaptchaConfig = hcaptchaVerify({
+    /*const hcaptchaConfig = hcaptchaVerify({
         secret: env.HCAPTCHA_SECRET,
         sitekey: env.HCAPTCHA_SITE_KEY,
     });
@@ -101,7 +101,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
-    }
+    }*/
 
     // If hcaptcha verification passes, run the static forms plugin
     return staticForms(context);
