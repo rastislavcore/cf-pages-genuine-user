@@ -75,6 +75,16 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
 export const onRequestPost: PagesFunction<Env> = async (context) => {
     const { env, request } = context;
 
+    if (request.method !== 'POST') {
+        console.warn('Not supported method: '+request.method);
+        return new Response(JSON.stringify({
+            message: 'Method Not Allowed',
+        }), {
+            status: 405,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    }
+
     // Update hcaptcha configuration with the environment variables
     /*const hcaptchaConfig = hcaptchaVerify({
         secret: env.HCAPTCHA_SECRET,
