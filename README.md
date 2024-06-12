@@ -101,7 +101,7 @@ npm i
 Use the following HTML for your form. Place this in an HTML file that you serve from your Cloudflare Pages site.
 
 ```html
-<form id="verify-form" data-static-form-name="verify-person" method="post">
+<form id="verify-form" data-static-form-name="verify-person" method="post" action="/api/1/verify">
     <select id="type" name="type" required>
         …
     </select>

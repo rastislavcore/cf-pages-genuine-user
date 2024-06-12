@@ -34,7 +34,8 @@ export async function onRequestPost({ request }: { request: Request }) {
 
 export async function onRequest({ request }: { request: Request }) {
   console.log('Received request:', request.method);
-  if (request.method === 'POST') {
+  const url = new URL(request.url);
+  if (request.method === 'POST' && url.pathname === '/api/verify') {
     return onRequestPost({ request });
   }
   return new Response('Method Not Allowed', { status: 405 });
