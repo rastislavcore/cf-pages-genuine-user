@@ -24,7 +24,7 @@ export async function onRequestPost(context) {
             console.warn('Captcha verification failed', JSON.stringify(hcaptchaResponse));
             return new Response(JSON.stringify({
                 message: 'Captcha verification failed.',
-                details: hcaptchaResponse,
+                details: {hcaptchaResponse, env },
             }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' },
