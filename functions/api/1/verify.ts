@@ -4,9 +4,8 @@ import { KVNamespace } from '@cloudflare/workers-types';
 interface Env {
     HCAPTCHA_SECRET: string;
     HCAPTCHA_SITE_KEY: string;
+    AUTHORIZED_CONTACTS: KVNamespace;
 }
-
-declare const AUTHORIZED_CONTACTS: KVNamespace;
 
 export async function onRequestPost(context) {
     const { env, request } = context;
@@ -44,14 +43,14 @@ export async function onRequestPost(context) {
 
         console.log('Form Data:', { type, username });
 
-        return await checkRepresentative(formData);
+        return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
     } catch (error) {
         console.error('Error processing form:', (error as Error).message);
         return new Response(`Error processing form: ${(error as Error).message}`, { status: 500 });
     }
 }
 
-const checkRepresentative = async (formData: FormData): Promise<Response> => {
+const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace): Promise<Response> => {
     const type = formData.get('type')?.toString().trim().toLowerCase();
     let username = formData.get('username')?.toString().trim().toLowerCase();
 
@@ -71,7 +70,7 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
     // Create the key
     const key = `${type}:${username}`;
     console.log(`Looking up KV for key: ${key}`);
-    const representative = await AUTHORIZED_CONTACTS.get(key);
+    const representative = await kvNamespace.get(key);
 
     try {
         if (representative) {
