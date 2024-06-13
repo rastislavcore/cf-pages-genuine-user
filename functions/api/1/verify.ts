@@ -6,7 +6,7 @@ interface Env {
     HCAPTCHA_SITE_KEY: string;
 }
 
-declare const KV_NAMESPACE: KVNamespace;
+declare const AUTHORIZED_CONTACTS: KVNamespace;
 
 export async function onRequestPost(context) {
     const { env, request } = context;
@@ -71,23 +71,28 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
     // Create the key
     const key = `${type}:${username}`;
     console.log(`Looking up KV for key: ${key}`);
-    const representative = await KV_NAMESPACE.get(key);
+    const representative = await AUTHORIZED_CONTACTS.get(key);
 
-    if (representative) {
-        console.log(`User found: ${representative}`);
-        return new Response(JSON.stringify({
-            message: `User: '${representative}' is an official representative under this contact.`,
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
-    } else {
-        console.warn('User not found');
-        return new Response(JSON.stringify({
-            message: `This contact is not authorized as an official contact!`,
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
+    try {
+        if (representative) {
+            console.log(`User found: ${representative}`);
+            return new Response(JSON.stringify({
+                message: `User: '${representative}' is an official representative under this contact.`,
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        } else {
+            console.warn('User not found');
+            return new Response(JSON.stringify({
+                message: `This contact is not authorized as an official contact!`,
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+    } catch (error) {
+        console.error('Error processing form:', (error as Error).message);
+        return new Response(`Error processing form: ${(error as Error).message}`, { status: 500 });
     }
 }

@@ -67,8 +67,10 @@ Set up KV storage and binding for the system in read-only mode.
 3. Scroll down to KV namespace bindings.
 4. Click on "Get started" button.
 5. Click on "Create a namespace" button.
-6. Fill in Namespace Name as `KV_NAMESPACE` and click "Add".
+6. Fill in Namespace Name as `AUTHORIZED_CONTACTS` and click "Add".
 7. Now you can add the entries.
+
+Read more [here](https://developers.cloudflare.com/pages/functions/bindings/#kv-namespaces).
 
 #### Database structure
 
@@ -93,6 +95,16 @@ If you need just Typescript file, installing required libraries is enough:
 ```sh
 npm i
 ```
+
+## API
+
+API structure:
+
+Endpoint | Version | Action
+--- | --- | ---
+/api | /1 | /verify
+
+You can customize the path simply changing the structure in the `/functions` folder and changing `action` in the form.
 
 ## Usage
 
