@@ -15,7 +15,7 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
         return new Response(JSON.stringify({
             message: `Invalid form data.`,
         }), {
-            status: 200,
+            status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
     }
@@ -54,10 +54,21 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
 }
 
 export const onRequestPost: PagesFunction<Env>[] = [
-    (context) => hCaptchaPlugin({
-        secret: context.env.HCAPTCHA_SECRET,
-        sitekey: context.env.HCAPTCHA_SITE_KEY,
-    })(context),
+    (context) => {
+        try {
+            return hCaptchaPlugin({
+                secret: context.env.HCAPTCHA_SECRET,
+                sitekey: context.env.HCAPTCHA_SITE_KEY,
+            })(context);
+        } catch (error) {
+            return new Response(JSON.stringify({
+                message: `Captcha verification failed.`
+            }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+    },
     async (context) => {
         const { env, request } = context;
         try {
