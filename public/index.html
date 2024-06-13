@@ -48,10 +48,10 @@
                     messageDiv.textContent = result.message;
                 } else {
                     const errorData = await response.json();
-                    messageDiv.textContent = `Error: ${errorData.message} Data: ${JSON.stringify(errorData)}`;
+                    messageDiv.textContent = `Error: ${errorData.message}`;
                 }
             } catch (error) {
-                document.getElementById('response-message').textContent = `Server error! Please, contact the support.`;
+                document.getElementById('response-message').textContent = `Error: ${error.message}`;
             }
         });
     </script>
