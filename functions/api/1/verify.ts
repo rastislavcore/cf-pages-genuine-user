@@ -10,7 +10,7 @@ interface Env {
 export async function onRequestPost(context) {
     const { env, request } = context;
     try {
-        console.log('Starting hCaptcha verification');
+        console.log('Starting Captcha verification');
 
         // Update hcaptcha configuration with the environment variables
         const hcaptchaConfig = hcaptchaVerify({
@@ -21,9 +21,9 @@ export async function onRequestPost(context) {
         // Run hcaptcha verification first
         const hcaptchaResponse = await hcaptchaConfig(context);
         if (hcaptchaResponse) {
-            console.warn('hCaptcha verification failed', hcaptchaResponse);
+            console.warn('Captcha verification failed', JSON.stringify(hcaptchaResponse));
             return new Response(JSON.stringify({
-                message: 'hCaptcha verification failed',
+                message: 'Captcha verification failed.',
                 details: hcaptchaResponse,
             }), {
                 status: 400,
