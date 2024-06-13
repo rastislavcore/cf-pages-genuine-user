@@ -110,7 +110,7 @@ You can customize the path simply changing the structure in the `/functions` fol
 
 ## Usage
 
-### Form HTML
+### HTML / JS
 
 Use the following HTML for your form. Place this in an HTML file that you serve from your Cloudflare Pages site.
 
@@ -157,6 +157,50 @@ And script for showing the result:
         }
     });
 </script>
+```
+
+### React
+
+```ts
+import React, { useEffect } from 'react';
+
+useEffect(() => {
+    const form = document.getElementById('verify-form');
+    const messageDiv = document.getElementById('response-message');
+
+    const handleSubmit = async (event: Event) => {
+        event.preventDefault();
+        if (!form || !messageDiv) return;
+
+        const formData = new FormData(form as HTMLFormElement);
+
+        try {
+            const response = await fetch(form.getAttribute('action') || '', {
+                method: form.getAttribute('method') || 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                messageDiv.textContent = result.message;
+                messageDiv.style.color = 'green';
+            } else {
+                const errorData = await response.json();
+                messageDiv.textContent = `Error: ${errorData.message}`;
+                messageDiv.style.color = 'red';
+            }
+        } catch (error) {
+            messageDiv.textContent = 'Server error. Please, contact the support.';
+            messageDiv.style.color = 'red';
+        }
+    };
+
+    form?.addEventListener('submit', handleSubmit);
+
+    return () => {
+        form?.removeEventListener('submit', handleSubmit);
+    };
+}, []);
 ```
 
 ## License
