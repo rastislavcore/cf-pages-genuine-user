@@ -1,5 +1,5 @@
 import hCaptchaPlugin from '@cloudflare/pages-plugin-hcaptcha';
-import { KVNamespace } from '@cloudflare/workers-types';
+import { KVNamespace, PagesFunction } from '@cloudflare/workers-types';
 
 interface Env {
     HCAPTCHA_SECRET: string;
@@ -7,42 +7,9 @@ interface Env {
     AUTHORIZED_CONTACTS: KVNamespace;
 }
 
-export async function onRequestPost(context) {
-    const { env, request } = context;
-    hCaptchaPlugin({
-        secret: env.HCAPTCHA_SECRET,
-        sitekey: env.HCAPTCHA_SITE_KEY
-    }),
-    async (context) => {
-        const { env, request } = context;
-        try {
-            const contentType = request.headers.get('content-type');
-            if (!contentType || !contentType.includes('multipart/form-data')) {
-                return new Response(JSON.stringify({
-                    message: `Unsupported Media Type.`,
-                }), {
-                    status: 415,
-                    headers: { 'Content-Type': 'application/json' },
-                });
-            }
-
-            const formData = await request.formData();
-
-            return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
-        } catch (error) {
-            return new Response(JSON.stringify({
-                message: `Error processing the form.`,
-            }), {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
-    }
-}
-
 const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace): Promise<Response> => {
-    const type = formData.get('type')?.toString().trim().toLowerCase();
-    let username = formData.get('username')?.toString().trim().toLowerCase();
+    const type = (formData.get('type') as string)?.trim().toLowerCase();
+    let username = (formData.get('username') as string)?.trim().toLowerCase();
 
     if (!type || !username) {
         return new Response(JSON.stringify({
@@ -85,3 +52,37 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
         });
     }
 }
+
+export const onRequestPost: PagesFunction<Env>[] = [
+    (context) => hCaptchaPlugin({
+        secret: context.env.HCAPTCHA_SECRET,
+        sitekey: context.env.HCAPTCHA_SITE_KEY,
+    })(context),
+    async (context) => {
+        const { env, request } = context;
+        try {
+            console.log('hCaptcha verification succeeded');
+
+            const contentType = request.headers.get('content-type');
+            if (!contentType || !contentType.includes('multipart/form-data')) {
+                return new Response(JSON.stringify({
+                    message: `Unsupported Media Type.`,
+                }), {
+                    status: 415,
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            }
+
+            const formData = await request.formData() as FormData;
+            return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
+        } catch (error) {
+            console.error('Error processing form:', (error as Error).message);
+            return new Response(JSON.stringify({
+                message: `Error processing the form.`,
+            }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+    }
+];
