@@ -72,6 +72,8 @@ Set up KV storage and binding for the system in read-only mode.
 
 Read more [here](https://developers.cloudflare.com/pages/functions/bindings/#kv-namespaces).
 
+You can define different KV binding for staging and production, which is recommended.
+
 #### Database structure
 
 Key | Value
@@ -147,11 +149,11 @@ And script for showing the result:
                 const result = await response.json();
                 messageDiv.textContent = result.message;
             } else {
-                const errorText = await response.text();
-                messageDiv.textContent = `Error: ${errorText}`;
+                const errorData = await response.json();
+                messageDiv.textContent = `Error: ${errorData.message}`;
             }
         } catch (error) {
-            document.getElementById('response-message').textContent = `Error: ${error.message}`;
+            document.getElementById('response-message').textContent = `Server error. Please, contact the support.`;
         }
     });
 </script>
