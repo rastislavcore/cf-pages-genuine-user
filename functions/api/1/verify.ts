@@ -1,6 +1,5 @@
 import hcaptchaVerify from '@cloudflare/pages-plugin-hcaptcha';
-import createStaticFormsPlugin from '@cloudflare/pages-plugin-static-forms';
-import { PagesFunction, KVNamespace, Request, Response } from '@cloudflare/workers-types';
+import { KVNamespace } from '@cloudflare/workers-types';
 
 interface Env {
     HCAPTCHA_SECRET: string;
@@ -9,16 +8,34 @@ interface Env {
 
 declare const KV_NAMESPACE: KVNamespace;
 
-export const onRequestPost: PagesFunction<Env> = async (context) => {
+export async function onRequestPost(context) {
     const { env, request } = context;
     try {
+        // Update hcaptcha configuration with the environment variables
+        /*const hcaptchaConfig = hcaptchaVerify({
+            secret: env.HCAPTCHA_SECRET,
+            sitekey: env.HCAPTCHA_SITE_KEY,
+        });
+
+        // Run hcaptcha verification first
+        const hcaptchaResponse = await hcaptchaConfig(context);
+        if (hcaptchaResponse) {
+            console.warn('hCaptcha verification failed');
+            return new Response(JSON.stringify({
+                message: hcaptchaResponse,
+            }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }*/
+
         console.log('Handling POST request');
         const contentType = request.headers.get('content-type');
         console.log('Content-Type:', contentType);
 
         if (!contentType || !contentType.includes('multipart/form-data')) {
             console.log('Unsupported Media Type');
-            return new Response('Unsupported Media Type', { status: 415 }) as Response;
+            return new Response('Unsupported Media Type', { status: 415 });
         }
 
         const formData = await request.formData();
@@ -31,18 +48,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
         if (!type || !username || !gRecaptchaResponse || !hCaptchaResponse) {
             console.log('Missing fields in form data');
-            return new Response('Missing fields', { status: 400 }) as Response;
+            return new Response('Missing fields', { status: 400 });
         }
 
         // Process the form data as needed
-        return new Response('Form submitted successfully', { status: 200 }) as Response;
+        return new Response('Form submitted successfully', { status: 200 });
     } catch (error) {
         console.error('Error processing form:', (error as Error).message);
-        return new Response(`Error processing form: ${(error as Error).message}`, { status: 500 }) as Response;
+        return new Response(`Error processing form: ${(error as Error).message}`, { status: 500 });
     }
 }
 
-// Function to check representative
 const checkRepresentative = async (formData: FormData): Promise<Response> => {
     const type = formData.get('type')?.toString().trim().toLowerCase();
     let username = formData.get('username')?.toString().trim().toLowerCase();
@@ -54,7 +70,7 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
         }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },
-        }) as Response;
+        });
     }
 
     // Normalize the username
@@ -72,7 +88,7 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
-        }) as Response;
+        });
     } else {
         console.warn('User not found');
         return new Response(JSON.stringify({
@@ -80,6 +96,6 @@ const checkRepresentative = async (formData: FormData): Promise<Response> => {
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
-        }) as Response;
+        });
     }
 }
