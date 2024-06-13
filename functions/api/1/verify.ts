@@ -15,7 +15,7 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
         return new Response(JSON.stringify({
             message: `Invalid form data.`,
         }), {
-            status: 400,
+            status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
     }
@@ -61,8 +61,6 @@ export const onRequestPost: PagesFunction<Env>[] = [
     async (context) => {
         const { env, request } = context;
         try {
-            console.log('hCaptcha verification succeeded');
-
             const contentType = request.headers.get('content-type');
             if (!contentType || !contentType.includes('multipart/form-data')) {
                 return new Response(JSON.stringify({
@@ -76,7 +74,6 @@ export const onRequestPost: PagesFunction<Env>[] = [
             const formData = await request.formData() as FormData;
             return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
         } catch (error) {
-            console.error('Error processing form:', (error as Error).message);
             return new Response(JSON.stringify({
                 message: `Error processing the form.`,
             }), {
