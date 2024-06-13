@@ -41,18 +41,10 @@ export async function onRequestPost(context) {
         const formData = await request.formData();
         const type = formData.get('type');
         const username = formData.get('username');
-        const gRecaptchaResponse = formData.get('g-recaptcha-response');
-        const hCaptchaResponse = formData.get('h-captcha-response');
 
-        console.log('Form Data:', { type, username, gRecaptchaResponse, hCaptchaResponse });
+        console.log('Form Data:', { type, username });
 
-        if (!type || !username || !gRecaptchaResponse || !hCaptchaResponse) {
-            console.log('Missing fields in form data');
-            return new Response('Missing fields', { status: 400 });
-        }
-
-        // Process the form data as needed
-        return new Response('Form submitted successfully', { status: 200 });
+        return await checkRepresentative(formData);
     } catch (error) {
         console.error('Error processing form:', (error as Error).message);
         return new Response(`Error processing form: ${(error as Error).message}`, { status: 500 });
