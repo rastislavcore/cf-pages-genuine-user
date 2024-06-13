@@ -1,4 +1,4 @@
-import hcaptchaVerify from '@cloudflare/pages-plugin-hcaptcha';
+import hCaptchaPlugin from '@cloudflare/pages-plugin-hcaptcha';
 import { KVNamespace } from '@cloudflare/workers-types';
 
 interface Env {
@@ -9,50 +9,34 @@ interface Env {
 
 export async function onRequestPost(context) {
     const { env, request } = context;
-    try {
-        console.log('Starting Captcha verification');
+    hCaptchaPlugin({
+        secret: env.HCAPTCHA_SECRET,
+        sitekey: env.HCAPTCHA_SITE_KEY
+    }),
+    async (context) => {
+        const { env, request } = context;
+        try {
+            const contentType = request.headers.get('content-type');
+            if (!contentType || !contentType.includes('multipart/form-data')) {
+                return new Response(JSON.stringify({
+                    message: `Unsupported Media Type.`,
+                }), {
+                    status: 415,
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            }
 
-        // Update hcaptcha configuration with the environment variables
-        const hcaptchaConfig = hcaptchaVerify({
-            secret: env.HCAPTCHA_SECRET,
-            sitekey: env.HCAPTCHA_SITE_KEY,
-        });
+            const formData = await request.formData();
 
-        // Run hcaptcha verification first
-        const hcaptchaResponse = await hcaptchaConfig(context);
-        if (hcaptchaResponse) {
-            console.warn('Captcha verification failed', JSON.stringify(hcaptchaResponse));
+            return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
+        } catch (error) {
             return new Response(JSON.stringify({
-                message: 'Captcha verification failed.',
-                details: {hcaptchaResponse, env },
+                message: `Error processing the form.`,
             }), {
-                status: 400,
+                status: 500,
                 headers: { 'Content-Type': 'application/json' },
             });
         }
-
-        console.log('hCaptcha verification succeeded');
-
-        const contentType = request.headers.get('content-type');
-        if (!contentType || !contentType.includes('multipart/form-data')) {
-            return new Response(JSON.stringify({
-                message: `Unsupported Media Type.`,
-            }), {
-                status: 415,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
-
-        const formData = await request.formData();
-
-        return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
-    } catch (error) {
-        return new Response(JSON.stringify({
-            message: `Error processing the form.`,
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
     }
 }
 
