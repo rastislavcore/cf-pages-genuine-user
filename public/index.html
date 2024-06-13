@@ -45,13 +45,13 @@
                 const messageDiv = document.getElementById('response-message');
                 if (response.ok) {
                     const result = await response.json();
-                    messageDiv.textContent = `Ok: ${result.message} Data: ${JSON.stringify(result)}`;
+                    messageDiv.textContent = result.message;
                 } else {
                     const errorData = await response.json();
-                    messageDiv.textContent = `Error1: ${errorData.message} Data: ${JSON.stringify(errorData)}`;
+                    messageDiv.textContent = `Error: ${errorData.message} Data: ${JSON.stringify(errorData)}`;
                 }
             } catch (error) {
-                document.getElementById('response-message').textContent = `Error2: ${error.message} Data: ${JSON.stringify(error)}`;
+                document.getElementById('response-message').textContent = `Server error! Please, contact the support.`;
             }
         });
     </script>

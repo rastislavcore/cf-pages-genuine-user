@@ -10,6 +10,8 @@ interface Env {
 export async function onRequestPost(context) {
     const { env, request } = context;
     try {
+        console.log('Starting hCaptcha verification');
+
         // Update hcaptcha configuration with the environment variables
         const hcaptchaConfig = hcaptchaVerify({
             secret: env.HCAPTCHA_SECRET,
@@ -19,14 +21,17 @@ export async function onRequestPost(context) {
         // Run hcaptcha verification first
         const hcaptchaResponse = await hcaptchaConfig(context);
         if (hcaptchaResponse) {
-            console.warn('hCaptcha verification failed');
+            console.warn('hCaptcha verification failed', hcaptchaResponse);
             return new Response(JSON.stringify({
-                message: hcaptchaResponse,
+                message: 'hCaptcha verification failed',
+                details: hcaptchaResponse,
             }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' },
             });
         }
+
+        console.log('hCaptcha verification succeeded');
 
         const contentType = request.headers.get('content-type');
         if (!contentType || !contentType.includes('multipart/form-data')) {
