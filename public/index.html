@@ -3,11 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Form Submission</title>
+	<title>Verification Center</title>
 </head>
 <body>
 	<form id="verify-form" data-static-form-name="verify-person" method="post" action="/api/1/verify">
-		<label for="type">Contact Type:</label>
+		<label for="type">Contact Type</label>
 		<select id="type" name="type" required>
 			<option value="email" selected>E-mail</option>
 			<option value="telegram">Telegram</option>
@@ -18,13 +18,13 @@
 			<option value="github">GitHub</option>
 		</select>
 		<br />
-		<label for="username">Contact name:</label>
+		<label for="username">Contact Information</label>
 		<input type="text" id="username" name="username" pattern="[a-zA-Z0-9%_@.+\-]+" title="Insert valid username without any prefixes or suffixes." required />
 		<br />
 		<div class="h-captcha" data-sitekey="{{HCAPTCHA_SITE_KEY}}"></div>
 		<script src="https://hcaptcha.com/1/api.js" async defer></script>
 		<br />
-		<button type="submit">Verify</button>
+		<button type="submit">Verification Center</button>
 	</form>
 	<div id="response-message"></div>
 
