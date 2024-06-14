@@ -153,7 +153,7 @@ And script for showing the result:
                 messageDiv.textContent = `Error: ${errorData.message}`;
             }
         } catch (error) {
-            document.getElementById('response-message').textContent = `Server error. Please, contact the support.`;
+            document.getElementById('response-message').textContent = `Server error. Please, contact the support department.`;
         }
     });
 </script>
@@ -165,6 +165,24 @@ And script for showing the result:
 import React, { useEffect } from 'react';
 
 useEffect(() => {
+    const loadScript = () => {
+        const script = document.createElement('script');
+        script.src = 'https://hcaptcha.com/1/api.js';
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+
+        script.onload = () => {
+            console.log('hCaptcha script loaded successfully');
+        };
+
+        script.onerror = () => {
+            console.error('Error loading hCaptcha script');
+        };
+    };
+
+    loadScript();
+
     const form = document.getElementById('verify-form');
     const messageDiv = document.getElementById('response-message');
 
@@ -190,7 +208,7 @@ useEffect(() => {
                 messageDiv.style.color = 'red';
             }
         } catch (error) {
-            messageDiv.textContent = 'Server error. Please, contact the support.';
+            messageDiv.textContent = 'Server error. Please, contact the support department.';
             messageDiv.style.color = 'red';
         }
     };
