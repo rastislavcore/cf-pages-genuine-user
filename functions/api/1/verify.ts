@@ -13,7 +13,7 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
 
 	if (!type || !username) {
 		return new Response(JSON.stringify({
-			message: `Invalid form data.`,
+			message: `Invalid form data. Make sure both fields are filled.`,
 		}), {
 			status: 400,
 			headers: { 'Content-Type': 'application/json' },
@@ -30,14 +30,14 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
 	try {
 		if (representative) {
 			return new Response(JSON.stringify({
-				message: `User: '${representative}' is an official representative under this contact.`,
+				message: `Our system successfully verified the contact information you provided. '${representative}' is a genuine team member, and you may freely continue communicating with them. `,
 			}), {
 				status: 200,
 				headers: { 'Content-Type': 'application/json' },
 			});
 		} else {
 			return new Response(JSON.stringify({
-				message: `This contact is not authorized as an official contact!`,
+				message: `Our system could not verify the contact information you provided. This may not be an official representative, and we advise you to cease communication with this account at once to protect the safety of your assets and your account.`,
 			}), {
 				status: 200,
 				headers: { 'Content-Type': 'application/json' },
@@ -45,7 +45,7 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
 		}
 	} catch (error) {
 		return new Response(JSON.stringify({
-			message: `Error searching for the data.`,
+			message: `Error searching for the data. Please contact our support department.`,
 		}), {
 			status: 500,
 			headers: { 'Content-Type': 'application/json' },
@@ -101,7 +101,7 @@ export const onRequestPost: PagesFunction<Env>[] = [
 			return await checkRepresentative(formData, env.AUTHORIZED_CONTACTS);
 		} catch (error) {
 			return new Response(JSON.stringify({
-				message: `Error processing the form.`,
+				message: `Error processing your request. Please refresh the page and try again.`,
 				error: error.message
 			}), {
 				status: 500,
