@@ -31,6 +31,7 @@ const checkRepresentative = async (formData: FormData, kvNamespace: KVNamespace)
 		if (representative) {
 			return new Response(JSON.stringify({
 				message: `Our system successfully verified the contact information you provided. '${representative}' is a genuine team member, and you may freely continue communicating with them. `,
+				valid: true,
 			}), {
 				status: 200,
 				headers: { 'Content-Type': 'application/json' },

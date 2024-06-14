@@ -164,6 +164,12 @@ And script for showing the result:
 ```ts
 import React, { useEffect } from 'react';
 
+declare global {
+  interface Window {
+    hcaptcha: any;
+  }
+}
+
 useEffect(() => {
     const loadScript = () => {
         const script = document.createElement('script');
@@ -201,15 +207,28 @@ useEffect(() => {
             if (response.ok) {
                 const result = await response.json();
                 messageDiv.textContent = result.message;
-                messageDiv.style.color = 'green';
+                if (result.valid) {
+                    messageDiv.style.color = 'green';
+                } else {
+                    messageDiv.style.color = 'red';
+                }
+                if (window.hcaptcha) {
+                    window.hcaptcha.reset();
+                }
             } else {
                 const errorData = await response.json();
                 messageDiv.textContent = `Error: ${errorData.message}`;
                 messageDiv.style.color = 'red';
+                if (window.hcaptcha) {
+                    window.hcaptcha.reset();
+                }
             }
         } catch (error) {
             messageDiv.textContent = 'Server error. Please, contact the support department.';
             messageDiv.style.color = 'red';
+            if (window.hcaptcha) {
+                window.hcaptcha.reset();
+            }
         }
     };
 
